@@ -29,4 +29,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.google.guava:guava:23.3-android'
+    implementation 'com.android.support:cardview-v7:26.1.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }

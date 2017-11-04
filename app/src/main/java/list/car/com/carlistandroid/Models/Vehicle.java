@@ -40,6 +40,7 @@ public class Vehicle {
 
     VehMakeModel VehMakeModel;
     String PictureURL;
+    Object objectParent;
 
     public Vehicle() {
     }
@@ -130,6 +131,14 @@ public class Vehicle {
 
     public void setPictureURL(String pictureURL) {
         PictureURL = pictureURL;
+    }
+
+    public Object getObjectParent() {
+        return objectParent;
+    }
+
+    public void setObjectParent(Object objectParent) {
+        this.objectParent = objectParent;
     }
 
 }
