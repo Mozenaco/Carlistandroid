@@ -12,11 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LoginActivity"
+            android:name=".Activities.LoginActivity"
             android:label="@string/title_activity_login">
         </activity>
         <activity
-            android:name=".CarListActivity"
+            android:name=".Activities.CarListActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -26,13 +26,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CarDetailActivity"
+            android:name=".Activities.CarDetailActivity"
             android:label="@string/title_car_detail"
-            android:parentActivityName=".CarListActivity"
+            android:parentActivityName=".Activities.CarListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="list.car.com.carlistandroid.CarListActivity" />
+                android:value="list.car.com.carlistandroid.Activities.CarListActivity" />
         </activity>
     </application>
 

@@ -1,4 +1,4 @@
-package list.car.com.carlistandroid;
+package list.car.com.carlistandroid.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,9 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+
+import list.car.com.carlistandroid.Fragments.CarDetailFragment;
+import list.car.com.carlistandroid.R;
 
 /**
  * An activity representing a single Car detail screen. This

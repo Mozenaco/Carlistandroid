@@ -131,4 +131,5 @@ public class Vehicle {
     public void setPictureURL(String pictureURL) {
         PictureURL = pictureURL;
     }
+
 }

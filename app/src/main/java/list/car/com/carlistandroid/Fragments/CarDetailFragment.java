@@ -1,4 +1,4 @@
-package list.car.com.carlistandroid;
+package list.car.com.carlistandroid.Fragments;
 
 import android.app.Activity;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import list.car.com.carlistandroid.Activities.CarDetailActivity;
+import list.car.com.carlistandroid.Activities.CarListActivity;
+import list.car.com.carlistandroid.R;
 import list.car.com.carlistandroid.dummy.DummyContent;
 
 /**

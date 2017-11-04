@@ -1,4 +1,4 @@
-package list.car.com.carlistandroid;
+package list.car.com.carlistandroid.Activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,25 +8,27 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Ordering;
+import com.google.common.collect.TreeMultimap;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import list.car.com.carlistandroid.Fragments.CarDetailFragment;
 import list.car.com.carlistandroid.Models.VehAvailRSCore;
-import list.car.com.carlistandroid.Models.VehRentalCore;
-import list.car.com.carlistandroid.Models.VehVendorAvails;
+import list.car.com.carlistandroid.Models.Vehicle;
+import list.car.com.carlistandroid.R;
 import list.car.com.carlistandroid.dummy.DummyContent;
 
 import java.io.IOException;
@@ -34,11 +36,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.Format;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.TimeZone;
+import java.util.TreeMap;
 
 /**
  * An activity representing a list of Cars. This activity
@@ -58,11 +64,16 @@ public class CarListActivity extends AppCompatActivity {
     private boolean mTwoPane;
     String sURL = "http://www.cartrawler.com/ctabe/cars.json"; // url
     private JsonDownloader jsonDownloader = null;
+    VehAvailRSCore vehAvailRSCore;
+    TextView tvPickUpDateTime, tvReturnDateTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_car_list);
+
+        tvPickUpDateTime = (TextView)findViewById(R.id.tvPickUpDateTime);
+        tvReturnDateTime = (TextView)findViewById(R.id.tvReturnDateTime);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -76,24 +87,36 @@ public class CarListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        View recyclerView = findViewById(R.id.car_list);
-        assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
-
         jsonDownloader = new CarListActivity.JsonDownloader();
         jsonDownloader.execute((Void) null);
 
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+
+        Multimap<Float, Vehicle> map = TreeMultimap.create(Ordering.natural(), Ordering.arbitrary());//Way to get duplicate keys
+        for(int i = 0; i < vehAvailRSCore.getVehVendorAvails().size(); i++) {
+            for (int j = 0; j < vehAvailRSCore.getVehVendorAvails().get(i).getVehAvails().size(); j++) {
+
+                map.put(Float.valueOf(vehAvailRSCore.getVehVendorAvails().get(i).getVehAvails().get(j).getTotalCharge().getRateTotalAmount()),
+                        vehAvailRSCore.getVehVendorAvails().get(i).getVehAvails().get(j).getVehicle());
+            }
+        }
+
+        List<Vehicle> vehicles = new ArrayList<>();
+
+        for (Vehicle value : map.values()) {
+            vehicles.add(value);//Vehicles ordered by price
+        }
+
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, vehicles, mTwoPane));
     }
 
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final CarListActivity mParentActivity;
-        private final List<DummyContent.DummyItem> mValues;
+        private final List<Vehicle> mValues;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
@@ -119,7 +142,7 @@ public class CarListActivity extends AppCompatActivity {
         };
 
         SimpleItemRecyclerViewAdapter(CarListActivity parent,
-                                      List<DummyContent.DummyItem> items,
+                                      List<Vehicle> items,
                                       boolean twoPane) {
             mValues = items;
             mParentActivity = parent;
@@ -135,11 +158,10 @@ public class CarListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
-
-            holder.itemView.setTag(mValues.get(position));
-            holder.itemView.setOnClickListener(mOnClickListener);
+            //holder.mIdView.setText(mValues.get(position).id);
+            holder.mContentView.setText(mValues.get(position).getVehMakeModel().getName());
+            //holder.itemView.setTag(mValues.get(position));
+            //holder.itemView.setOnClickListener(mOnClickListener);
         }
 
         @Override
@@ -189,12 +211,25 @@ public class CarListActivity extends AppCompatActivity {
             //Toast.makeText(getApplicationContext(), json.toString(), Toast.LENGTH_LONG).show();
 
             JsonObject object = json.get(0).getAsJsonObject().get("VehAvailRSCore").getAsJsonObject();
-
             Gson gson = new Gson();
+            vehAvailRSCore = gson.fromJson(object, VehAvailRSCore.class);
 
-            VehAvailRSCore vehAvailRSCore = gson.fromJson(object, VehAvailRSCore.class);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-            Log.i("test","ok");
+            try {
+                Format formatter = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");
+
+                tvPickUpDateTime.setText(formatter.format(sdf.parse(vehAvailRSCore.getVehRentalCore().getPickUpDateTime())));
+                tvReturnDateTime.setText(formatter.format(sdf.parse(vehAvailRSCore.getVehRentalCore().getReturnDateTime())));
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            View recyclerView = findViewById(R.id.car_list);
+            assert recyclerView != null;
+            setupRecyclerView((RecyclerView) recyclerView);
         }
     }
 }

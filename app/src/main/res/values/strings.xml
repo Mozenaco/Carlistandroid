@@ -15,4 +15,6 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="pick_up_date_time">Pick Up Date/Time:</string>
+    <string name="return_date_time">Return Date/Time:</string>
 </resources>

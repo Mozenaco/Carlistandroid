@@ -9,5 +9,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="list.car.com.carlistandroid.CarListActivity"
+    tools:context="list.car.com.carlistandroid.Activities.CarListActivity"
     tools:listitem="@layout/car_list_content" />
