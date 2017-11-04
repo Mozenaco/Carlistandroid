@@ -1,6 +1,10 @@
 package list.car.com.carlistandroid.Models;
 
+import android.support.v4.graphics.PathParser;
+
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 import list.car.com.carlistandroid.Enums.FuelType;
 import list.car.com.carlistandroid.Enums.TransmissionType;
@@ -9,7 +13,7 @@ import list.car.com.carlistandroid.Enums.TransmissionType;
  * Created by mateusandrade on 04/11/2017.
  */
 
-public class Vehicle {
+public class Vehicle implements Serializable{
 
     @SerializedName("@AirConditionInd")
     Boolean airConditionInd;
@@ -41,6 +45,7 @@ public class Vehicle {
     VehMakeModel VehMakeModel;
     String PictureURL;
     Object objectParent;
+    public static transient PathParser.PathDataNode dNode = null;
 
     public Vehicle() {
     }

@@ -70,6 +70,8 @@ public class CarListActivity extends AppCompatActivity {
     private JsonDownloader jsonDownloader = null;
     VehAvailRSCore vehAvailRSCore;
     TextView tvPickUpDateTime, tvReturnDateTime;
+    public List<Vehicle> vehicles;
+    public static Vehicle itemClicked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,20 +100,29 @@ public class CarListActivity extends AppCompatActivity {
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
 
-        Multimap<Float, Vehicle> map = TreeMultimap.create(Ordering.natural(), Ordering.arbitrary());//Way to get duplicate keys
+        Multimap<Float, Vehicle> map = TreeMultimap.create(Ordering.natural(), Ordering.arbitrary());//Way to get the duplicate keys
+        Multimap<Float, VehVendorAvails> vehVendorAvailsmap = TreeMultimap.create(Ordering.natural(), Ordering.arbitrary());
 
         for(int i = 0; i < vehAvailRSCore.getVehVendorAvails().size(); i++) {
             for (int j = 0; j < vehAvailRSCore.getVehVendorAvails().get(i).getVehAvails().size(); j++) {
 
                 map.put(Float.valueOf(vehAvailRSCore.getVehVendorAvails().get(i).getVehAvails().get(j).getTotalCharge().getRateTotalAmount()),
                         vehAvailRSCore.getVehVendorAvails().get(i).getVehAvails().get(j).getVehicle());
+
+                vehVendorAvailsmap.put(Float.valueOf(vehAvailRSCore.getVehVendorAvails().get(i).getVehAvails().get(j).getTotalCharge().getRateTotalAmount()),
+                        vehAvailRSCore.getVehVendorAvails().get(i));
             }
         }
 
-        List<Vehicle> vehicles = new ArrayList<>();
+        vehicles = new ArrayList<>();
 
         for (Vehicle value : map.values()) {
             vehicles.add(value);//Vehicles ordered by price
+        }
+        int i = 0;
+        for (VehVendorAvails value : vehVendorAvailsmap.values()) {
+            vehicles.get(i).setObjectParent(value);//Vehicles ordered by price
+            i++;
         }
 
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, vehicles, mTwoPane));
@@ -123,28 +134,22 @@ public class CarListActivity extends AppCompatActivity {
         private final CarListActivity mParentActivity;
         private final List<Vehicle> mValues;
         private final boolean mTwoPane;
-//        private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
-//                if (mTwoPane) {
-//                    Bundle arguments = new Bundle();
-//                    arguments.putString(CarDetailFragment.ARG_ITEM_ID, item.id);
-//                    CarDetailFragment fragment = new CarDetailFragment();
-//                    fragment.setArguments(arguments);
-//
-//                    mParentActivity.getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.car_detail_container, fragment)
-//                            .commit();
-//                } else {
-//                    Context context = view.getContext();
-//                    Intent intent = new Intent(context, CarDetailActivity.class);
-//                    intent.putExtra(CarDetailFragment.ARG_ITEM_ID, item.id);
-//
-//                    context.startActivity(intent);
-//                }
-//            }
-//        };
+        private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                itemClicked = (Vehicle) view.getTag();
+
+                Context context = view.getContext();
+                Intent intent = new Intent(context, CarDetailActivity.class);
+
+               // Bundle bundle = new Bundle();
+               // bundle.putSerializable("Vehicle", item);
+               // intent.putExtra("Vehicle", item);
+
+                context.startActivity(intent);
+
+            }
+        };
 
         SimpleItemRecyclerViewAdapter(CarListActivity parent,
                                       List<Vehicle> items,
@@ -164,24 +169,29 @@ public class CarListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             //holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).getVehMakeModel().getName());
-            holder.AirConditionInd.setText(mValues.get(position).getAirConditionInd() ? "Air Condition: Yes" : "Air Condition: No");
-            holder.TransmissionType.setText("Transmission: "+mValues.get(position).getTransmissionType());
-            holder.FuelType.setText("Fuel Type: "+mValues.get(position).getFuelType());
-            holder.DriveType.setText("Drive Type: "+mValues.get(position).getDriveType());
-            holder.PassengerQuantity.setText("Passenger: "+mValues.get(position).getPassengerQuantity());
-            holder.BaggageQuantity.setText("Baggage: "+mValues.get(position).getBaggageQuantity());
-            holder.Code.setText("Code: "+mValues.get(position).getCode());
-            holder.CodeContext.setText("CodeContext: "+mValues.get(position).getCodeContext());
-            holder.DoorCount.setText("DoorCount: "+mValues.get(position).getDoorCount());
+            try {
+                holder.VehMakeModelName.setText(mValues.get(position).getVehMakeModel().getName());
+                holder.AirConditionInd.setText(mValues.get(position).getAirConditionInd() ? "Air Condition: Yes" : "Air Condition: No");
+                holder.TransmissionType.setText("Transmission: " + mValues.get(position).getTransmissionType());
+                holder.FuelType.setText("Fuel Type: " + mValues.get(position).getFuelType());
+                holder.DriveType.setText("Drive Type: " + mValues.get(position).getDriveType());
+                holder.PassengerQuantity.setText("Passenger: " + mValues.get(position).getPassengerQuantity());
+                holder.BaggageQuantity.setText("Baggage: " + mValues.get(position).getBaggageQuantity());
+                holder.Code.setText("Code: " + mValues.get(position).getCode());
+                holder.CodeContext.setText("CodeContext: " + mValues.get(position).getCodeContext());
+                holder.DoorCount.setText("DoorCount: " + mValues.get(position).getDoorCount());
 
-//            holder.RateTotalAmount.setText("Vendor Name: "+mValues.get(position).getDoorCount());
-//            holder.EstimatedTotalAmount.setText("Estimated Total Amount: "+mValues.get(position).getDoorCount());
-//            holder.CurrencyCode.setText("Currency Code: "+mValues.get(position).getDoorCount());
-//            holder.VendorCode.setText("Vendor Code: "+mValues.get(position).getDoorCount());
-            //holder.VendorName.setText("Vendor Name: "+mValues.get(position).getDoorCount());
-            //holder.itemView.setTag(mValues.get(position));
-            //holder.itemView.setOnClickListener(mOnClickListener);
+                holder.RateTotalAmount.setText("Rate Total Amount Name: " + ((VehVendorAvails) mValues.get(position).getObjectParent()).getVehAvails().get(0).getTotalCharge().getRateTotalAmount());
+                holder.EstimatedTotalAmount.setText("Estimated Total Amount: " + ((VehVendorAvails) mValues.get(position).getObjectParent()).getVehAvails().get(0).getTotalCharge().getEstimatedTotalAmount());
+                holder.CurrencyCode.setText("Currency Code: " + ((VehVendorAvails) mValues.get(position).getObjectParent()).getVehAvails().get(0).getTotalCharge().getCurrencyCode());
+                holder.VendorCode.setText("Vendor Code: " + ((VehVendorAvails) mValues.get(position).getObjectParent()).getVendor().getCode());
+                holder.VendorName.setText("Vendor Name: " + ((VehVendorAvails) mValues.get(position).getObjectParent()).getVendor().getName());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            holder.itemView.setTag(mValues.get(position));
+            holder.itemView.setOnClickListener(mOnClickListener);
 
             holder.imageCar.setImageBitmap(null);
             Picasso.with(holder.imageCar.getContext()).load(mValues.get(position).getPictureURL()).fit().centerCrop().into(holder.imageCar);
@@ -194,7 +204,7 @@ public class CarListActivity extends AppCompatActivity {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            final TextView mContentView;
+            final TextView VehMakeModelName;
             final TextView AirConditionInd;
             final TextView TransmissionType;
             final TextView FuelType;
@@ -214,7 +224,7 @@ public class CarListActivity extends AppCompatActivity {
 
             ViewHolder(View view) {
                 super(view);
-                mContentView = view.findViewById(R.id.VehMakeModelName);
+                VehMakeModelName = view.findViewById(R.id.VehMakeModelName);
                 AirConditionInd = view.findViewById(R.id.AirConditionInd);
                 TransmissionType = view.findViewById(R.id.TransmissionType);
                 FuelType = view.findViewById(R.id.FuelType);

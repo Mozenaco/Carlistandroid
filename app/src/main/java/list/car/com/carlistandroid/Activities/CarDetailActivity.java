@@ -9,8 +9,13 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import list.car.com.carlistandroid.Fragments.CarDetailFragment;
+import list.car.com.carlistandroid.Models.VehVendorAvails;
 import list.car.com.carlistandroid.R;
 
 /**
@@ -21,6 +26,25 @@ import list.car.com.carlistandroid.R;
  */
 public class CarDetailActivity extends AppCompatActivity {
 
+     TextView VehMakeModelName;
+     TextView AirConditionInd;
+     TextView TransmissionType;
+     TextView FuelType;
+     TextView DriveType;
+     TextView PassengerQuantity;
+     TextView BaggageQuantity;
+     TextView Code;
+     TextView CodeContext;
+     TextView DoorCount;
+     ImageView imageCar;
+
+     TextView RateTotalAmount;
+     TextView EstimatedTotalAmount;
+     TextView CurrencyCode;
+     TextView VendorCode;
+     TextView VendorName;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,14 +52,49 @@ public class CarDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        VehMakeModelName = findViewById(R.id.VehMakeModelName);
+        AirConditionInd = findViewById(R.id.AirConditionInd);
+        TransmissionType = findViewById(R.id.TransmissionType);
+        FuelType = findViewById(R.id.FuelType);
+        DriveType = findViewById(R.id.DriveType);
+        PassengerQuantity = findViewById(R.id.PassengerQuantity);
+        BaggageQuantity = findViewById(R.id.BaggageQuantity);
+        Code = findViewById(R.id.Code);
+        CodeContext = findViewById(R.id.CodeContext);
+        DoorCount = findViewById(R.id.DoorCount);
+        RateTotalAmount = findViewById(R.id.RateTotalAmount);
+        EstimatedTotalAmount = findViewById(R.id.EstimatedTotalAmount);
+        CurrencyCode = findViewById(R.id.CurrencyCode);
+        VendorCode = findViewById(R.id.VendorCode);
+        VendorName = findViewById(R.id.VendorName);
+        imageCar = findViewById(R.id.imageCar);
+
+
+        try {
+            VehMakeModelName.setText(CarListActivity.itemClicked.getVehMakeModel().getName());
+            AirConditionInd.setText(CarListActivity.itemClicked.getAirConditionInd() ? "Air Condition: Yes" : "Air Condition: No");
+            TransmissionType.setText("Transmission: " + CarListActivity.itemClicked.getTransmissionType());
+            FuelType.setText("Fuel Type: " + CarListActivity.itemClicked.getFuelType());
+            DriveType.setText("Drive Type: " + CarListActivity.itemClicked.getDriveType());
+            PassengerQuantity.setText("Passenger: " + CarListActivity.itemClicked.getPassengerQuantity());
+            BaggageQuantity.setText("Baggage: " + CarListActivity.itemClicked.getBaggageQuantity());
+            Code.setText("Code: " +CarListActivity.itemClicked.getCode());
+            CodeContext.setText("CodeContext: " + CarListActivity.itemClicked.getCodeContext());
+            DoorCount.setText("DoorCount: " + CarListActivity.itemClicked.getDoorCount());
+
+            RateTotalAmount.setText("Rate Total Amount Name: " + ((VehVendorAvails) CarListActivity.itemClicked.getObjectParent()).getVehAvails().get(0).getTotalCharge().getRateTotalAmount());
+            EstimatedTotalAmount.setText("Estimated Total Amount: " + ((VehVendorAvails) CarListActivity.itemClicked.getObjectParent()).getVehAvails().get(0).getTotalCharge().getEstimatedTotalAmount());
+            CurrencyCode.setText("Currency Code: " + ((VehVendorAvails) CarListActivity.itemClicked.getObjectParent()).getVehAvails().get(0).getTotalCharge().getCurrencyCode());
+            VendorCode.setText("Vendor Code: " + ((VehVendorAvails) CarListActivity.itemClicked.getObjectParent()).getVendor().getCode());
+            VendorName.setText("Vendor Name: " + ((VehVendorAvails) CarListActivity.itemClicked.getObjectParent()).getVendor().getName());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+        imageCar.setImageBitmap(null);
+        Picasso.with(imageCar.getContext()).load(CarListActivity.itemClicked.getPictureURL()).fit().centerCrop().into(imageCar);
+
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();

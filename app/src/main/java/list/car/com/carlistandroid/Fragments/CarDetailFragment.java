@@ -1,6 +1,7 @@
 package list.car.com.carlistandroid.Fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import list.car.com.carlistandroid.Activities.CarDetailActivity;
 import list.car.com.carlistandroid.Activities.CarListActivity;
+import list.car.com.carlistandroid.Models.Vehicle;
 import list.car.com.carlistandroid.R;
 
 /**
@@ -26,6 +28,9 @@ public class CarDetailFragment extends Fragment {
      */
     public static final String ARG_ITEM_ID = "item_id";
 
+    private Vehicle vehicle;
+
+    private String VehMakeModelName;
     /**
      * The dummy content this fragment is presenting.
      */
@@ -45,7 +50,12 @@ public class CarDetailFragment extends Fragment {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            //mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+
+            vehicle = (Vehicle) getArguments().getSerializable("Vehicle");
+
+            //vehicle = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            VehMakeModelName = (String) getArguments().getString("VehMakeModelName");
+
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
@@ -61,9 +71,10 @@ public class CarDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.car_detail, container, false);
 
         // Show the dummy content as text in a TextView.
-        //if (mItem != null) {
-        //    ((TextView) rootView.findViewById(R.id.car_detail)).setText(mItem.details);
-        //}
+        if (vehicle != null) {
+            ((TextView) rootView.findViewById(R.id.car_detail)).setText(vehicle.getCodeContext());
+        }
+        ((TextView) rootView.findViewById(R.id.car_detail)).setText(VehMakeModelName);
 
         return rootView;
     }
