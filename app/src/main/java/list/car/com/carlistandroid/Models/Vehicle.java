@@ -20,6 +20,19 @@ public class Vehicle {
     VehMakeModel vehMakeModel;
     String pictureURL;
 
+    public Vehicle(Boolean airConditionInd, TransmissionType transmissionType, FuelType fuelType, String passengerQuantity, Integer baggageQuantity, String code, String codeContext, Integer doorCount, VehMakeModel vehMakeModel, String pictureURL) {
+        this.airConditionInd = airConditionInd;
+        this.transmissionType = transmissionType;
+        this.fuelType = fuelType;
+        this.passengerQuantity = passengerQuantity;
+        this.baggageQuantity = baggageQuantity;
+        this.code = code;
+        this.codeContext = codeContext;
+        this.doorCount = doorCount;
+        this.vehMakeModel = vehMakeModel;
+        this.pictureURL = pictureURL;
+    }
+
     public Boolean getAirConditionInd() {
         return airConditionInd;
     }

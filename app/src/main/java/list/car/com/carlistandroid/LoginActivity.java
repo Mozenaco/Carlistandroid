@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,11 +31,16 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static android.Manifest.permission.READ_CONTACTS;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * A login screen that offers login via email/password.
@@ -64,10 +70,18 @@ public class LoginActivity extends AppCompatActivity {
     private View mProgressView;
     private View mLoginFormView;
 
+    String sURL = "http://www.cartrawler.com/ctabe/cars.json"; // url
+    private JsonDownloader jsonDownloader = null;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        jsonDownloader = new JsonDownloader();
+        jsonDownloader.execute((Void) null);
+
         // Set up the login form.
         mEmailView = (EditText) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -211,6 +225,38 @@ public class LoginActivity extends AppCompatActivity {
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    public class JsonDownloader extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+            String json = null;
+            // Connect to the URL using java's native library
+            try {
+                URL url = new URL(sURL);
+                HttpURLConnection request = null;
+                request = (HttpURLConnection) url.openConnection();
+                request.connect();
+                // Convert to a JSON object to print data
+                JsonParser jp = new JsonParser(); //from gson
+                JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent())); //Convert the input stream to a json element
+                JsonArray rootArray = root.getAsJsonArray(); //May be an array, may be an object.
+                json = rootArray.get(0).toString();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return json;
+        }
+
+        @Override
+        protected void onPostExecute(final String json) {
+            Log.i("LoginActivity", "JSON: " + json);
+            Toast.makeText(getApplicationContext(), json, Toast.LENGTH_LONG).show();
+        }
+
     }
 
     public void gotoCarListActivity(){

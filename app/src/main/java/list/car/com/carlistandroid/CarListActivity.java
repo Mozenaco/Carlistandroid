@@ -2,6 +2,7 @@ package list.car.com.carlistandroid;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -9,15 +10,29 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import list.car.com.carlistandroid.dummy.DummyContent;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * An activity representing a list of Cars. This activity
@@ -35,6 +50,8 @@ public class CarListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
+    String sURL = "http://www.cartrawler.com/ctabe/cars.json"; // url
+    private JsonDownloader jsonDownloader = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,15 +61,6 @@ public class CarListActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         if (findViewById(R.id.car_detail_container) != null) {
             // The detail container view will be present only in the
@@ -65,6 +73,10 @@ public class CarListActivity extends AppCompatActivity {
         View recyclerView = findViewById(R.id.car_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
+
+        jsonDownloader = new CarListActivity.JsonDownloader();
+        jsonDownloader.execute((Void) null);
+
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -139,5 +151,47 @@ public class CarListActivity extends AppCompatActivity {
                 mContentView = view.findViewById(R.id.content);
             }
         }
+    }
+
+    public class JsonDownloader extends AsyncTask<Void, Void, JsonObject> {
+
+
+        @Override
+        protected JsonObject doInBackground(Void... params) {
+            JsonObject jsonObject = null;
+            // Connect to the URL using java's native library
+            try {
+                URL url = new URL(sURL);
+                HttpURLConnection request = null;
+                request = (HttpURLConnection) url.openConnection();
+                request.connect();
+                // Convert to a JSON object to print data
+                JsonParser jp = new JsonParser(); //from gson
+                JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent())); //Convert the input stream to a json element
+                JsonArray rootArray = root.getAsJsonArray(); //May be an array, may be an object.
+                jsonObject = rootArray.get(0).getAsJsonObject();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return jsonObject;
+        }
+
+        @Override
+        protected void onPostExecute(final JsonObject jsonObject) {
+            Log.i(getClass().getName(), "JSON: " + jsonObject.toString());
+            Toast.makeText(getApplicationContext(), jsonObject.toString(), Toast.LENGTH_LONG).show();
+
+            //jsonObject.get("VehAvailRSCore").get;
+
+            Set<Map.Entry<String, JsonElement>> entries = jsonObject.entrySet();//will return members of your object
+            for (Map.Entry<String, JsonElement> entry: entries) {
+                Log.i(getClass().getName(), entry.getKey());
+            }
+
+
+        }
+
     }
 }

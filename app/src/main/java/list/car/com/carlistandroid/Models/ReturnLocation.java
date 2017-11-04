@@ -4,11 +4,10 @@ package list.car.com.carlistandroid.Models;
  * Created by mateusandrade on 04/11/2017.
  */
 
-public class VehMakeModel {
-
+public class ReturnLocation {
     String name;
 
-    public VehMakeModel(String name) {
+    public ReturnLocation(String name) {
         this.name = name;
     }
 
