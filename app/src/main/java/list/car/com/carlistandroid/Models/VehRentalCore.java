@@ -1,52 +1,61 @@
 package list.car.com.carlistandroid.Models;
 
+import android.util.Log;
+
+import com.google.gson.JsonObject;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by mateusandrade on 04/11/2017.
  */
 
 public class VehRentalCore {
 
-      String pickUpDateTime;
-      String returnDateTime;
-      PickUpLocation pickUpLocation;
-      ReturnLocation returnLocation;
+    @SerializedName("@PickUpDateTime")
+    String PickUpDateTime;
 
-    public VehRentalCore(String pickUpDateTime, String returnDateTime, PickUpLocation pickUpLocation, ReturnLocation returnLocation) {
-        this.pickUpDateTime = pickUpDateTime;
-        this.returnDateTime = returnDateTime;
-        this.pickUpLocation = pickUpLocation;
-        this.returnLocation = returnLocation;
-    }
+    @SerializedName("@ReturnDateTime")
+    String ReturnDateTime;
+
+    PickUpLocation PickUpLocation;
+    ReturnLocation ReturnLocation;
 
     public String getPickUpDateTime() {
-        return pickUpDateTime;
+        return PickUpDateTime;
     }
 
     public void setPickUpDateTime(String pickUpDateTime) {
-        this.pickUpDateTime = pickUpDateTime;
+        PickUpDateTime = pickUpDateTime;
     }
 
     public String getReturnDateTime() {
-        return returnDateTime;
+        return ReturnDateTime;
     }
 
     public void setReturnDateTime(String returnDateTime) {
-        this.returnDateTime = returnDateTime;
+        ReturnDateTime = returnDateTime;
     }
 
-    public PickUpLocation getPickUpLocation() {
-        return pickUpLocation;
+    public list.car.com.carlistandroid.Models.PickUpLocation getPickUpLocation() {
+        return PickUpLocation;
     }
 
-    public void setPickUpLocation(PickUpLocation pickUpLocation) {
-        this.pickUpLocation = pickUpLocation;
+    public void setPickUpLocation(list.car.com.carlistandroid.Models.PickUpLocation pickUpLocation) {
+        PickUpLocation = pickUpLocation;
     }
 
-    public ReturnLocation getReturnLocation() {
-        return returnLocation;
+    public list.car.com.carlistandroid.Models.ReturnLocation getReturnLocation() {
+        return ReturnLocation;
     }
 
-    public void setReturnLocation(ReturnLocation returnLocation) {
-        this.returnLocation = returnLocation;
+    public void setReturnLocation(list.car.com.carlistandroid.Models.ReturnLocation returnLocation) {
+        ReturnLocation = returnLocation;
+    }
+
+    public static VehRentalCore parse(JsonObject asJsonObject) {
+
+        VehRentalCore v = new VehRentalCore();
+
+        return v;
     }
 }

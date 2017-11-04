@@ -1,19 +1,23 @@
 package list.car.com.carlistandroid.Models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by mateusandrade on 04/11/2017.
  */
 
 public class TotalCharge {
 
+    @SerializedName("@RateTotalAmount")
     String rateTotalAmount;
+
+    @SerializedName("@EstimatedTotalAmount")
     String estimatedTotalAmount;
+
+    @SerializedName("@CurrencyCode")
     String currencyCode;
 
-    public TotalCharge(String rateTotalAmount, String estimatedTotalAmount, String currencyCode) {
-        this.rateTotalAmount = rateTotalAmount;
-        this.estimatedTotalAmount = estimatedTotalAmount;
-        this.currencyCode = currencyCode;
+    public TotalCharge() {
     }
 
     public String getRateTotalAmount() {

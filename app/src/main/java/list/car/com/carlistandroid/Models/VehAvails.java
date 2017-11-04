@@ -1,5 +1,7 @@
 package list.car.com.carlistandroid.Models;
 
+import com.google.gson.annotations.SerializedName;
+
 import list.car.com.carlistandroid.Enums.Status;
 
 /**
@@ -8,37 +10,38 @@ import list.car.com.carlistandroid.Enums.Status;
 
 public class VehAvails {
 
-    Status status;
-    Vehicle vehicle;
-    TotalCharge totalCharge;
 
-    public VehAvails(Status status, Vehicle vehicle, TotalCharge totalCharge) {
-        this.status = status;
-        this.vehicle = vehicle;
-        this.totalCharge = totalCharge;
+    @SerializedName("@Status")
+    String status;
+
+    Vehicle Vehicle;
+    TotalCharge TotalCharge;
+
+    public VehAvails() {
+
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public Vehicle getVehicle() {
-        return vehicle;
+    public list.car.com.carlistandroid.Models.Vehicle getVehicle() {
+        return Vehicle;
     }
 
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
+    public void setVehicle(list.car.com.carlistandroid.Models.Vehicle vehicle) {
+        Vehicle = vehicle;
     }
 
-    public TotalCharge getTotalCharge() {
-        return totalCharge;
+    public list.car.com.carlistandroid.Models.TotalCharge getTotalCharge() {
+        return TotalCharge;
     }
 
-    public void setTotalCharge(TotalCharge totalCharge) {
-        this.totalCharge = totalCharge;
+    public void setTotalCharge(list.car.com.carlistandroid.Models.TotalCharge totalCharge) {
+        TotalCharge = totalCharge;
     }
 }

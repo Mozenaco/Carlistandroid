@@ -1,32 +1,35 @@
 package list.car.com.carlistandroid.Models;
 
+import com.google.gson.JsonObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by mateusandrade on 04/11/2017.
  */
 
 public class VehVendorAvails {
 
-    Vendor vendor;
-    VehAvails vehAvails;
+    Vendor Vendor;
+    public List<VehAvails> VehAvails;
 
-    public VehVendorAvails(Vendor vendor, VehAvails vehAvails) {
-        this.vendor = vendor;
-        this.vehAvails = vehAvails;
+    public VehVendorAvails() {
     }
 
-    public Vendor getVendor() {
-        return vendor;
+    public list.car.com.carlistandroid.Models.Vendor getVendor() {
+        return Vendor;
     }
 
-    public void setVendor(Vendor vendor) {
-        this.vendor = vendor;
+    public void setVendor(list.car.com.carlistandroid.Models.Vendor vendor) {
+        Vendor = vendor;
     }
 
-    public VehAvails getVehAvails() {
-        return vehAvails;
+    public List<list.car.com.carlistandroid.Models.VehAvails> getVehAvails() {
+        return VehAvails;
     }
 
-    public void setVehAvails(VehAvails vehAvails) {
-        this.vehAvails = vehAvails;
+    public void setVehAvails(List<list.car.com.carlistandroid.Models.VehAvails> vehAvails) {
+        VehAvails = vehAvails;
     }
 }

@@ -1,12 +1,17 @@
 package list.car.com.carlistandroid.Models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by mateusandrade on 04/11/2017.
  */
 
 public class Vendor {
 
+    @SerializedName("@Code")
     String code;
+
+    @SerializedName("@Name")
     String name;
 
     public Vendor(String code, String name) {

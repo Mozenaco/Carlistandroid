@@ -1,5 +1,7 @@
 package list.car.com.carlistandroid.Models;
 
+import com.google.gson.annotations.SerializedName;
+
 import list.car.com.carlistandroid.Enums.FuelType;
 import list.car.com.carlistandroid.Enums.TransmissionType;
 
@@ -9,28 +11,37 @@ import list.car.com.carlistandroid.Enums.TransmissionType;
 
 public class Vehicle {
 
+    @SerializedName("@AirConditionInd")
     Boolean airConditionInd;
-    TransmissionType transmissionType;
-    FuelType fuelType;
-    String passengerQuantity;
-    Integer baggageQuantity;
-    String code;
-    String codeContext;
-    Integer doorCount;
-    VehMakeModel vehMakeModel;
-    String pictureURL;
 
-    public Vehicle(Boolean airConditionInd, TransmissionType transmissionType, FuelType fuelType, String passengerQuantity, Integer baggageQuantity, String code, String codeContext, Integer doorCount, VehMakeModel vehMakeModel, String pictureURL) {
-        this.airConditionInd = airConditionInd;
-        this.transmissionType = transmissionType;
-        this.fuelType = fuelType;
-        this.passengerQuantity = passengerQuantity;
-        this.baggageQuantity = baggageQuantity;
-        this.code = code;
-        this.codeContext = codeContext;
-        this.doorCount = doorCount;
-        this.vehMakeModel = vehMakeModel;
-        this.pictureURL = pictureURL;
+    @SerializedName("@TransmissionType")
+    String transmissionType;
+
+    @SerializedName("@FuelType")
+    String fuelType;
+
+    @SerializedName("@DriveType")
+    String driveType;
+
+    @SerializedName("@PassengerQuantity")
+    String passengerQuantity;
+
+    @SerializedName("@BaggageQuantity")
+    String baggageQuantity;
+
+    @SerializedName("@Code")
+    String code;
+
+    @SerializedName("@CodeContext")
+    String codeContext;
+
+    @SerializedName("@DoorCount")
+    String doorCount;
+
+    VehMakeModel VehMakeModel;
+    String PictureURL;
+
+    public Vehicle() {
     }
 
     public Boolean getAirConditionInd() {
@@ -41,20 +52,28 @@ public class Vehicle {
         this.airConditionInd = airConditionInd;
     }
 
-    public TransmissionType getTransmissionType() {
+    public String getTransmissionType() {
         return transmissionType;
     }
 
-    public void setTransmissionType(TransmissionType transmissionType) {
+    public void setTransmissionType(String transmissionType) {
         this.transmissionType = transmissionType;
     }
 
-    public FuelType getFuelType() {
+    public String getFuelType() {
         return fuelType;
     }
 
-    public void setFuelType(FuelType fuelType) {
+    public void setFuelType(String fuelType) {
         this.fuelType = fuelType;
+    }
+
+    public String getDriveType() {
+        return driveType;
+    }
+
+    public void setDriveType(String driveType) {
+        this.driveType = driveType;
     }
 
     public String getPassengerQuantity() {
@@ -65,11 +84,11 @@ public class Vehicle {
         this.passengerQuantity = passengerQuantity;
     }
 
-    public Integer getBaggageQuantity() {
+    public String getBaggageQuantity() {
         return baggageQuantity;
     }
 
-    public void setBaggageQuantity(Integer baggageQuantity) {
+    public void setBaggageQuantity(String baggageQuantity) {
         this.baggageQuantity = baggageQuantity;
     }
 
@@ -89,27 +108,27 @@ public class Vehicle {
         this.codeContext = codeContext;
     }
 
-    public Integer getDoorCount() {
+    public String getDoorCount() {
         return doorCount;
     }
 
-    public void setDoorCount(Integer doorCount) {
+    public void setDoorCount(String doorCount) {
         this.doorCount = doorCount;
     }
 
-    public VehMakeModel getVehMakeModel() {
-        return vehMakeModel;
+    public list.car.com.carlistandroid.Models.VehMakeModel getVehMakeModel() {
+        return VehMakeModel;
     }
 
-    public void setVehMakeModel(VehMakeModel vehMakeModel) {
-        this.vehMakeModel = vehMakeModel;
+    public void setVehMakeModel(list.car.com.carlistandroid.Models.VehMakeModel vehMakeModel) {
+        VehMakeModel = vehMakeModel;
     }
 
     public String getPictureURL() {
-        return pictureURL;
+        return PictureURL;
     }
 
     public void setPictureURL(String pictureURL) {
-        this.pictureURL = pictureURL;
+        PictureURL = pictureURL;
     }
 }

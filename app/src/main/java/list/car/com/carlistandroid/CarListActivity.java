@@ -18,11 +18,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import list.car.com.carlistandroid.Models.VehAvailRSCore;
+import list.car.com.carlistandroid.Models.VehRentalCore;
+import list.car.com.carlistandroid.Models.VehVendorAvails;
 import list.car.com.carlistandroid.dummy.DummyContent;
 
 import java.io.IOException;
@@ -30,6 +34,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -153,12 +159,12 @@ public class CarListActivity extends AppCompatActivity {
         }
     }
 
-    public class JsonDownloader extends AsyncTask<Void, Void, JsonObject> {
+    public class JsonDownloader extends AsyncTask<Void, Void, JsonArray> {
 
 
         @Override
-        protected JsonObject doInBackground(Void... params) {
-            JsonObject jsonObject = null;
+        protected JsonArray doInBackground(Void... params) {
+            JsonArray json = null;
             // Connect to the URL using java's native library
             try {
                 URL url = new URL(sURL);
@@ -169,29 +175,26 @@ public class CarListActivity extends AppCompatActivity {
                 JsonParser jp = new JsonParser(); //from gson
                 JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent())); //Convert the input stream to a json element
                 JsonArray rootArray = root.getAsJsonArray(); //May be an array, may be an object.
-                jsonObject = rootArray.get(0).getAsJsonObject();
+                json = rootArray;
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            return jsonObject;
+            return json;
         }
 
         @Override
-        protected void onPostExecute(final JsonObject jsonObject) {
-            Log.i(getClass().getName(), "JSON: " + jsonObject.toString());
-            Toast.makeText(getApplicationContext(), jsonObject.toString(), Toast.LENGTH_LONG).show();
+        protected void onPostExecute(final JsonArray json) {
+            //Toast.makeText(getApplicationContext(), json.toString(), Toast.LENGTH_LONG).show();
 
-            //jsonObject.get("VehAvailRSCore").get;
+            JsonObject object = json.get(0).getAsJsonObject().get("VehAvailRSCore").getAsJsonObject();
 
-            Set<Map.Entry<String, JsonElement>> entries = jsonObject.entrySet();//will return members of your object
-            for (Map.Entry<String, JsonElement> entry: entries) {
-                Log.i(getClass().getName(), entry.getKey());
-            }
+            Gson gson = new Gson();
 
+            VehAvailRSCore vehAvailRSCore = gson.fromJson(object, VehAvailRSCore.class);
 
+            Log.i("test","ok");
         }
-
     }
 }
